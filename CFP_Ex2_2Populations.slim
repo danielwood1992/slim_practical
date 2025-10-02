@@ -1,0 +1,40 @@
+// Keywords: migration, dispersal
+
+initialize() {
+	initializeMutationRate(1e-8);
+	initializeMutationType("m1", 0.5, "f", 0.0);
+	initializeMutationType("m2", 0.5, "f", 0.0);
+	initializeGenomicElementType("g1", c(m1,m2), c(1,0));
+	initializeGenomicElement(g1, 0, 99999);
+	initializeRecombinationRate(1e-8);
+	m1.convertToSubstitution = F;
+	m2.convertToSubstitution = F;
+
+	m1.color = "yellow";
+	m2.color = "green";
+
+}
+1 early() {
+	sim.addSubpop("p1", 500);
+}
+
+10000 early() {
+	 sim.addSubpopSplit("p2", 500, p1); 
+  	p1.setMigrationRates(p2, 0.0);
+	p2.setMigrationRates(p1, 0.0);
+
+}
+
+10010 late() {
+		{
+	muts = sim.mutations;
+ 	muts_p1 = muts[sim.mutationFrequencies(p1, muts) == 1];
+ 	muts_p2 = muts[sim.mutationFrequencies(p2, muts) == 1];
+ 	print("Fixed in p1");
+	print(length(muts[sim.mutationFrequencies(p1, sim.mutations)== 1]));
+	print("Fixed in p2");
+	print(length(muts[sim.mutationFrequencies(p2, sim.mutations)== 1]));	
+	print("Fixed in p1 and p2");
+	print(length(muts[sim.mutationFrequencies(p1, sim.mutations)== 1 & 	sim.mutationFrequencies(p2, sim.mutations)== 1]));	
+	}
+}
