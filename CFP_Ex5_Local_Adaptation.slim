@@ -1,0 +1,40 @@
+// Keywords: migration, dispersal
+
+initialize() {
+	initializeMutationRate(1e-8);
+	initializeMutationType("m1", 0.5, "f", 0.0);   // neutral
+	initializeMutationType("m2", 0.5, "f", 0.01);   // deleterious in p2
+	initializeMutationType("m3", 0.5, "f", -0.01);   // beneficial in p2
+	initializeMutationType("m4", 1, "f", -0.005);   // deleterious in both
+
+
+	m1.convertToSubstitution = F;
+	m2.convertToSubstitution = F;
+   m3.convertToSubstitution = F;
+   m4.convertToSubstitution = F;
+
+   m1.color = "gray";
+	m2.color = "blue"; //deleterious in p2, advantageous in p1
+ 	m3.color = "green"; //deleterious in p1, advantageous in p2
+ 	m4.color = "red"; //deleterious in both
+
+
+	initializeGenomicElementType("g1", c(m1,m2,m3, m4), c(1,1,1,5));
+
+	initializeGenomicElement(g1, 0, 99999);
+
+	initializeRecombinationRate(1e-7);
+
+}
+1 early() {
+   sim.addSubpop("p1", 2000);
+	sim.addSubpop("p2", 100);
+	p1.setMigrationRates(p2, 0);  
+	p2.setMigrationRates(p1, 0);  
+}
+
+
+mutationEffect(m2, p2) { return 1/effect; } 
+mutationEffect(m3, p2) { return 1/effect; } 
+
+50000 early() {  sim.outputFixedMutations(); }
