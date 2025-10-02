@@ -1,0 +1,18 @@
+// Keywords: environmental change
+
+initialize() {
+	initializeMutationRate(1e-8);
+	initializeMutationType("m1", 0.5, "f", 0.0);  // neutral
+	initializeMutationType("m2", 0.5, "f", -0.0001);  // beneficial
+
+	initializeGenomicElementType("g1", c(m1,m2), c(2,1));
+	initializeGenomicElement(g1, 0, 99999);
+	initializeRecombinationRate(1e-8);
+	m1.color = "yellow";
+	m2.color = "green";
+
+}
+1 early() { sim.addSubpop("p1", 5000); }
+
+10:50 mutationEffect(m2) { return 1.1; }
+
